@@ -23,6 +23,12 @@
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "db229e6c-2486-4d90-a5cd-ccaad70cca1b"
+      }
+    },
+    "owner": "glitch_xp"
   }
 }
