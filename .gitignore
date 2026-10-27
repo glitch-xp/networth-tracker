@@ -70,3 +70,7 @@ portfolio_backup_*.json
 # Build artifacts
 *.apk
 *.aab
+
+# Legacy web preview artifacts
+.next/
+next-env.d.ts
