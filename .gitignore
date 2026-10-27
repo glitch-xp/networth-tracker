@@ -31,7 +31,27 @@ yarn-error.*
 *.pem
 
 # local env files
-.env*.local
+.env
+.env.*
+!.env.example
+*.secret
+credentials.json
+token.json
+*.pfx
+
+# caches
+.cache/
+cache/
+.cache-*/
+.turbo/
+.eslintcache
+.stylelintcache
+__pycache__/
+.pytest_cache/
+
+# local agent tooling
+.agents/
+skills-lock.json
 
 # typescript
 *.tsbuildinfo
