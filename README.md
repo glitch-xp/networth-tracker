@@ -6,8 +6,6 @@ The app stores portfolio records in SQLite on the device. It uses device biometr
 
 ## Screenshots
 
-Actual Android captures from the mobile app running in Expo Go on a clean emulator. Screens show an empty portfolio; no personal financial data or API keys are included.
-
 <p>
   <img src="docs/screenshots/dashboard.png" width="260" alt="NetWorth mobile dashboard" />
   <img src="docs/screenshots/assets.png" width="260" alt="NetWorth mobile assets screen" />
