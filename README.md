@@ -6,6 +6,7 @@ The app stores portfolio records in SQLite on the device. It uses device biometr
 
 ## Screenshots
 
+Screens use fictional sample data.
 <p>
   <img src="docs/screenshots/dashboard.png" width="260" alt="NetWorth mobile dashboard" />
   <img src="docs/screenshots/assets.png" width="260" alt="NetWorth mobile assets screen" />
