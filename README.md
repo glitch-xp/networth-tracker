@@ -1,109 +1,94 @@
-# FinanceOS · Networth Tracker
+# NetWorth
 
-A personal finance web app for bringing accounts, balances, and transactions into one ledger. FinanceOS calculates net worth from assets minus liabilities, shows a financial overview in Indian rupees, and includes ingestion pipelines for bank SMS and Gmail receipts.
+An offline-first personal net worth and portfolio tracker built with Expo and React Native. Track investments, bank balances, physical assets, loans, and monthly cash flow in a dark mobile interface, with values displayed in Indian rupees.
 
-This is an early-stage, single-user project. The `main` branch contains the Next.js web app; an earlier Expo/Android app is preserved on [`backup/local-master-20261025`](https://github.com/glitch-xp/networth-tracker/tree/backup/local-master-20261025).
+The app stores portfolio records in SQLite on the device. It uses device biometrics or the device passcode when supported and enrolled. There is no Google sign-in, Supabase account, or hosted application backend to configure.
 
 ## Screenshots
 
-Captured from the actual web UI in an isolated local preview with empty data. Database responses were stubbed and authentication was disabled **only in the temporary screenshot copy**; the published app still requires Supabase authentication. No personal accounts, transactions, or credentials are shown.
+Actual Android captures from the mobile app running in Expo Go on a clean emulator. Screens show an empty portfolio; no personal financial data or API keys are included.
 
-### Dashboard
+<p>
+  <img src="docs/screenshots/dashboard.png" width="260" alt="NetWorth mobile dashboard" />
+  <img src="docs/screenshots/assets.png" width="260" alt="NetWorth mobile assets screen" />
+  <img src="docs/screenshots/cash-flow.png" width="260" alt="NetWorth mobile cash flow screen" />
+</p>
 
-Net worth, assets, liabilities, cash, and recent transactions at a glance. Crypto totals and the upcoming-bills and insights panels are placeholders in this version.
+## Features
 
-![FinanceOS dashboard with an empty ledger](docs/screenshots/dashboard.png)
+- **Net worth dashboard:** portfolio value, liabilities, category allocations, and monthly income, expenses, and savings. Hide balances with the visibility control.
+- **Asset tracking:** stocks, crypto, mutual funds, gold, real estate, ETFs, bank accounts, physical assets, loans, and other assets.
+- **Transactions and SIPs:** record purchases and sales, inspect asset history, and configure recurring investment schedules.
+- **Valuation:** Yahoo Finance price lookups for supported symbols, manual-price fallbacks, currency conversion, and physical-asset depreciation calculations.
+- **Projections:** portfolio growth charts using historical or category-default growth assumptions.
+- **Cash flow:** manage recurring monthly income and expenses.
+- **Local backup:** export portfolio records to JSON through the device share sheet and restore a JSON backup from the Assets screen.
+- **Optional Gemini insights:** provide your own API key and model in Settings for portfolio analysis and the dashboard executive summary.
 
-### Accounts
+Market prices and AI features require internet access. Projections use assumptions and are estimates, not guaranteed returns. Core portfolio records remain available locally.
 
-Organize asset and liability accounts, including banks, credit cards, loans, cash, brokers, mutual funds, and crypto wallets.
+## Run the app
 
-![FinanceOS account creation form](docs/screenshots/accounts.png)
-
-### Sign in
-
-Google sign-in through Supabase Auth.
-
-![FinanceOS Google sign-in screen](docs/screenshots/login.png)
-
-## What is implemented
-
-- **Financial overview:** net worth and asset/liability totals calculated from the latest stored account balance snapshots, plus recent transactions and a pending-review count.
-- **Account management:** create, edit, and deactivate accounts; store institution, currency, account type, and a masked identifier.
-- **Transaction ledger:** manual transaction entry and a searchable, filterable transaction list.
-- **Review queue:** inspect uncertain entries and confirm, edit, void, or ignore them.
-- **SMS ingestion:** a MacroDroid setup screen and an ingestion endpoint with HMAC verification, timestamp checks, replay protection, parsing, and deduplication logic.
-- **Gmail integration:** OAuth connection, read-only message retrieval, parsing, incremental sync, and a scheduled reconciliation route.
-- **AI parsing support:** a server-side Gemini provider and privacy-filtering utilities.
-
-The integration code requires provider credentials and database setup. Its presence does not mean those services are connected in a fresh installation.
-
-## Still in progress
-
-Investments, live crypto valuation, bills and subscriptions, spending analytics, and the AI Insights page currently display placeholders. Broker connections, financial goals, and security/export tools are also planned. Account currencies can be selected, but the dashboard currently formats totals in INR and does not implement foreign-exchange conversion.
-
-## Run locally
-
-Use Node.js 20.9 or later and npm.
+Use a current Node.js LTS release supported by the pinned Expo SDK, npm, and an Android device or emulator with a compatible Expo Go version.
 
 ```bash
 git clone https://github.com/glitch-xp/networth-tracker.git
 cd networth-tracker
 npm ci
-cp .env.example .env.local
-```
-
-1. Create a Supabase project and run the SQL files in `supabase/migrations/` in filename order using its SQL Editor.
-2. Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` in `.env.local`.
-3. Enable Google as an authentication provider in Supabase. Configure its Google OAuth credentials and allow `http://localhost:3000/auth/callback` as an application redirect URL. Use the callback URL supplied by Supabase when configuring the Google OAuth client.
-4. Start the app:
-
-```bash
-npm run dev
-```
-
-Open [localhost:3000](http://localhost:3000) and sign in with Google.
-
-### Optional integrations
-
-| Integration | Environment variables | Setup |
-| --- | --- | --- |
-| Gmail | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `NEXT_PUBLIC_APP_URL` | Enable Gmail API, configure the read-only Gmail scope, and register `<app-url>/api/gmail/callback` as a Google OAuth redirect. Connect from Settings. |
-| Gmail background sync | `SUPABASE_SERVICE_ROLE_KEY`, `CRON_SECRET` | Configure the scheduler to call `/api/cron/gmail-sync` with `Authorization: Bearer <CRON_SECRET>`. `vercel.json` declares a 15-minute schedule. |
-| Gmail push notifications | `GMAIL_PUBSUB_TOPIC` | Optional Google Cloud Pub/Sub topic and push subscription; polling is available without it. |
-| MacroDroid SMS | `MACRODROID_DEVICE_SECRET` | Follow the signing and request instructions in Settings. |
-| Gemini parsing | `GEMINI_API_KEY`, optionally `GEMINI_MODEL` and `AI_PROVIDER` | Set server-side credentials; `AI_PROVIDER` defaults to `gemini`. |
-
-The example environment file lists the core settings; add the optional variables above only for integrations you configure. Replace localhost with your deployed URL in production OAuth settings.
-
-## Stack and source layout
-
-Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4, Supabase Auth/PostgreSQL, Google APIs, and Gemini.
-
-```text
-src/app/              Pages, authentication callbacks, and API routes
-src/components/       Shared layout and navigation
-src/features/         Accounts, transaction ledger, and review queue
-src/lib/ingestion/    SMS parsing, signature checks, and deduplication
-src/lib/gmail/        Gmail client, parsing, and ingestion pipeline
-src/lib/ai/           Gemini provider and privacy utilities
-src/lib/supabase/     Database clients and types
-supabase/migrations/  Database schema and access policies
-docs/screenshots/     README screenshots
-```
-
-## Development
-
-```bash
-npm run lint
-npm run build
 npm start
 ```
 
-`npm start` serves a completed production build. See [the product specification](personal_financial_os_prd.md) for the broader roadmap; it includes features beyond the current implementation.
+Scan the QR code with Expo Go on Android, or press `a` in the Expo terminal to open an available Android emulator. The project currently pins Expo SDK 57 and React Native 0.86; use an Expo Go release compatible with SDK 57.
 
-## Credentials and data
+```bash
+npm run android
+```
 
-Keep real credentials in `.env.local` or your hosting provider's secret settings. Only the Supabase URL and anonymous key belong in `NEXT_PUBLIC_*` variables; service-role keys, OAuth client secrets, Gemini keys, and device secrets must remain server-side. The repository ignores local environment files, private-key files, build output, and caches. `.env.example` contains placeholders only.
+No `.env` file is required for the core app. Start with an empty portfolio, add assets from the Assets tab, then record transactions in an asset's detail screen. Use the dashboard's **Manage** action to add cash-flow entries.
 
-Gmail and Gemini are external services: enabled integrations exchange data with those providers. Review the authentication, token storage, ingestion routes, and database policies before using this early-stage app with sensitive financial data.
+On a device without enrolled biometrics, the app opens without a biometric prompt. Local authentication and sharing should be checked on a physical device before distributing a build.
+
+### Optional AI setup
+
+Enter your own Gemini API key and a model available to your account in **Settings**. The key starts empty in the source. The current settings store is in memory; do not assume the key or model selection persists across restarts.
+
+When AI features are used, the app authenticates requests to Google's Gemini service with that key. Price lookups contact Yahoo Finance. There is no requirement to configure Google OAuth or Google sign-in.
+
+### Android APK builds
+
+`eas.json` includes a preview profile that produces an APK:
+
+```bash
+npx eas-cli build --platform android --profile preview
+```
+
+An EAS account and project access are required. `app.json` contains the original application's public EAS project ID, owner, and Android package name. For a fork, link your own EAS project and use your own package name before building. Signing credentials belong in EAS or local secret storage, never in Git.
+
+## Source layout
+
+```text
+App.js                  Navigation, initialization, and local authentication
+src/screens/            Dashboard, assets, asset details, cash flow, settings, unlock
+src/database/schema.js  SQLite schema, data operations, and JSON backup/restore
+src/store/              Portfolio state and valuation updates
+src/services/           Yahoo Finance, Gemini, and SIP evaluation
+src/components/         Projection chart
+src/utils/              Cache and projection calculations
+assets/                 App icons and splash assets
+```
+
+## Development checks
+
+```bash
+npx expo export --platform android
+```
+
+This verifies Android JavaScript bundling; it does not create a signed APK. The repository does not currently define a test or lint script. Device-only behavior still needs native testing.
+
+## Privacy and repository hygiene
+
+SQLite portfolio records stay on the device unless exported or processed by an enabled external integration. JSON backups contain financial records; handle them as private files. Runtime caches, local databases, portfolio exports, environment files, signing keys, and generated build artifacts are excluded from Git. `src/utils/cache.js` is application source and is intentionally tracked.
+
+## License
+
+[MIT](LICENSE).

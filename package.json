@@ -1,35 +1,37 @@
 {
   "name": "networth-tracker",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
+  "version": "1.0.0",
+  "main": "index.js",
   "dependencies": {
-    "@supabase/ssr": "^0.12.4",
-    "@supabase/supabase-js": "^2.112.2",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "googleapis": "^174.0.1",
-    "lucide-react": "^1.30.0",
-    "next": "16.3.0",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
-    "recharts": "^3.10.1",
-    "tailwind-merge": "^3.6.0"
+    "@expo/vector-icons": "^15.0.2",
+    "@google/genai": "^2.18.0",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-navigation/bottom-tabs": "^7.18.17",
+    "@react-navigation/native": "^7.3.17",
+    "@react-navigation/native-stack": "^7.18.9",
+    "expo": "~57.0.15",
+    "expo-document-picker": "^57.0.1",
+    "expo-file-system": "^57.0.5",
+    "expo-font": "~57.0.1",
+    "expo-local-authentication": "^57.0.2",
+    "expo-sharing": "^57.0.14",
+    "expo-sqlite": "^57.0.1",
+    "expo-status-bar": "~57.0.1",
+    "negotiator": "^1.1.0",
+    "react": "19.2.3",
+    "react-native": "0.86.2",
+    "react-native-gifted-charts": "^1.4.78",
+    "react-native-linear-gradient": "^2.8.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-svg": "15.15.4",
+    "zustand": "^5.0.15"
   },
-  "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "16.3.0",
-    "tailwindcss": "^4",
-    "typescript": "^5"
-  }
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "private": true
 }
